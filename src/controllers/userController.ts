@@ -1,14 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { RegisterUserRequest } from "../types/types";
+import { RegisterUserRequest } from "types";
 
-const prisma = new PrismaClient();
-
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response, prisma: PrismaClient) => {
   const { name, email }: { name: string; email: string } = req.body;
 
   try {
-    const user: RegisterUserRequest = await prisma.calendarOwner.create({
+    const user:RegisterUserRequest = await prisma.calendarOwner.create({
       data: { name, email },
     });
     res.status(201).json({ message: "User registered successfully", user });
