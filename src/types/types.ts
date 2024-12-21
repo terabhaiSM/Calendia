@@ -13,3 +13,13 @@ export interface RegisterUserRequest {
       endTime: string;
     }[];
   }
+
+  export interface SearchAvailableSlotsRequest {
+    ownerId: number;
+    date: string; // Format: YYYY-MM-DD
+  }
+  
+  export interface AvailableSlot {
+    startTime: string; // Format: HH:mm
+    endTime: string; // Format: HH:mm
+  }
