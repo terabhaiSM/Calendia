@@ -4,8 +4,6 @@ import { AvailableSlot } from "../types/types";
 import { parseISO, format, addMinutes, isBefore, isAfter } from "date-fns";
 import { validateRequest } from "../utils/validation";
 
-const prisma = new PrismaClient();
-
 /**
  * Generate 60-minute interval time slots between start and end times.
  */
@@ -30,7 +28,7 @@ const generateTimeSlots = (startTime: string, endTime: string): AvailableSlot[] 
 /**
  * Search available time slots for a specific Calendar Owner and date.
  */
-export const searchAvailableSlots = async (req: Request, res: Response) => {
+export const searchAvailableSlots = async (req: Request, res: Response, prisma: PrismaClient) => {
   const { ownerId, date } = req.body;
 
   // Validate the incoming request

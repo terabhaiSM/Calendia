@@ -2,12 +2,10 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { parseISO, format } from "date-fns";
 
-const prisma = new PrismaClient();
-
 /**
  * Book an appointment for an Invitee.
  */
-export const bookAppointment = async (req: Request, res: Response) => {
+export const bookAppointment = async (req: Request, res: Response, prisma: PrismaClient) => {
   const { ownerId, inviteeName, inviteeEmail, date, timeSlot }: { 
     ownerId: string; 
     inviteeName: string; 
@@ -89,7 +87,7 @@ export const bookAppointment = async (req: Request, res: Response) => {
 /**
  * Retrieve all upcoming appointments for a specific Calendar Owner.
  */
-export const listUpcomingAppointments = async (req: Request, res: Response) => {
+export const listUpcomingAppointments = async (req: Request, res: Response, prisma: PrismaClient) => {
   const { ownerId } = req.query;
 
   // Validate ownerId
@@ -144,6 +142,7 @@ export const listUpcomingAppointments = async (req: Request, res: Response) => {
 
     res.status(200).json({ appointments: formattedAppointments });
   } catch (error) {
+    console.error("Error retrieving upcoming appointments:", error);
     res.status(500).json({ message: "Error retrieving upcoming appointments.", error });
   }
 };

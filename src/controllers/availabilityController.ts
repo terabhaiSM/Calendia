@@ -1,9 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 
-const prisma = new PrismaClient();
-
-export const setAvailability = async (req: Request, res: Response): Promise<Response | void> => {
+export const setAvailability = async (req: Request, res: Response, prisma: PrismaClient): Promise<Response | void> => {
   const { ownerId, availability }: { ownerId: string; availability: { dayOfWeek: string; startTime: string; endTime: string }[] } = req.body;
 
   try {
