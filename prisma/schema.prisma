@@ -15,31 +15,31 @@ datasource db {
 }
 
 model CalendarOwner {
-  id         Int           @id @default(autoincrement())
-  name       String
-  email      String         @unique
-  createdAt  DateTime       @default(now())
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  createdAt    DateTime       @default(now())
   availability Availability[]
   appointments Appointments[]
 }
 
 model Availability {
-  id        Int      @id @default(autoincrement())
-  ownerId   Int
-  dayOfWeek String   // Example: "Monday"
-  startTime String   // Example: "10:00"
-  endTime   String   // Example: "17:00"
-  createdAt DateTime @default(now())
+  id        String     @id @default(uuid())
+  ownerId   String
+  dayOfWeek String      // Example: "Monday"
+  startTime String      // Example: "10:00"
+  endTime   String      // Example: "17:00"
+  createdAt DateTime    @default(now())
   owner     CalendarOwner @relation(fields: [ownerId], references: [id])
 }
 
 model Appointments {
-  id          Int      @id @default(autoincrement())
-  ownerId     Int
+  id          String     @id @default(uuid())
+  ownerId     String
   inviteeName String
   inviteeEmail String
   date        DateTime
   timeSlot    String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime    @default(now())
   owner       CalendarOwner @relation(fields: [ownerId], references: [id])
 }

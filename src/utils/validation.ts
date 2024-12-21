@@ -1,9 +1,9 @@
 import { isValid, parseISO } from "date-fns";
 
-export const validateRequest = (data: { ownerId: number; date: string }): string[] | null => {
+export const validateRequest = (data: { ownerId: string; date: string }): string[] | null => {
   const errors: string[] = [];
 
-  if (!data.ownerId || typeof data.ownerId !== "number") {
+  if (!data.ownerId || typeof data.ownerId !== "string") {
     errors.push("Owner ID must be a valid number.");
   }
 

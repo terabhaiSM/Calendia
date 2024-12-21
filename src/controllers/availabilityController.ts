@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 const prisma = new PrismaClient();
 
 export const setAvailability = async (req: Request, res: Response): Promise<Response | void> => {
-  const { ownerId, availability }: { ownerId: number; availability: { dayOfWeek: string; startTime: string; endTime: string }[] } = req.body;
+  const { ownerId, availability }: { ownerId: string; availability: { dayOfWeek: string; startTime: string; endTime: string }[] } = req.body;
 
   try {
     const owner = await prisma.calendarOwner.findUnique({ where: { id: ownerId } });

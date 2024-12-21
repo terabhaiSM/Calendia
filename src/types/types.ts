@@ -1,12 +1,12 @@
 export interface RegisterUserRequest {
     name: string;
     email: string;
-    id: number;
+    id: string;
     createdAt: Date;
   }
   
   export interface AvailabilitySetupRequest {
-    ownerId: number;
+    ownerId: string;
     availability: {
       dayOfWeek: string;
       startTime: string;
@@ -15,7 +15,7 @@ export interface RegisterUserRequest {
   }
 
   export interface SearchAvailableSlotsRequest {
-    ownerId: number;
+    ownerId: string;
     date: string; // Format: YYYY-MM-DD
   }
   

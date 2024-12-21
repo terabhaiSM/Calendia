@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
  */
 export const bookAppointment = async (req: Request, res: Response) => {
   const { ownerId, inviteeName, inviteeEmail, date, timeSlot }: { 
-    ownerId: number; 
+    ownerId: string; 
     inviteeName: string; 
     inviteeEmail: string; 
     date: string; // Format: YYYY-MM-DD
@@ -83,5 +83,67 @@ export const bookAppointment = async (req: Request, res: Response) => {
     res.status(201).json({ message: "Appointment booked successfully.", appointment });
   } catch (error) {
     res.status(500).json({ message: "Error booking appointment.", error });
+  }
+};
+
+/**
+ * Retrieve all upcoming appointments for a specific Calendar Owner.
+ */
+export const listUpcomingAppointments = async (req: Request, res: Response) => {
+  const { ownerId } = req.query;
+
+  // Validate ownerId
+  if (!ownerId || typeof ownerId !== "string") {
+    return res.status(400).json({ message: "Invalid or missing ownerId." });
+  }
+
+  try {
+    // Validate if the Calendar Owner exists
+    const owner = await prisma.calendarOwner.findUnique({
+      where: { id: ownerId as string },
+    });
+
+    if (!owner) {
+      return res.status(404).json({ message: "Calendar Owner not found." });
+    }
+
+    // Retrieve upcoming appointments along with owner details
+    const currentDate = new Date();
+    const upcomingAppointments = await prisma.appointments.findMany({
+      where: {
+        ownerId: ownerId as string,
+        date: {
+          gte: currentDate, // Only fetch appointments from today onwards
+        },
+      },
+      orderBy: {
+        date: "asc", // Sort appointments by date
+      },
+      include: {
+        owner: true, // Include the CalendarOwner details in the result
+      },
+    });
+
+    if (upcomingAppointments.length === 0) {
+      return res.status(200).json({ message: "No upcoming appointments found.", appointments: [] });
+    }
+
+    // Format response with relevant details
+    const formattedAppointments = upcomingAppointments.map((appointment) => ({
+      id: appointment.id,
+      date: format(appointment.date, "yyyy-MM-dd"),
+      timeSlot: appointment.timeSlot,
+      inviteeName: appointment.inviteeName,
+      inviteeEmail: appointment.inviteeEmail,
+      owner: {
+        id: appointment.owner.id,
+        name: appointment.owner.name,
+        email: appointment.owner.email,
+      }, // Include owner's information
+    }));
+
+    res.status(200).json({ appointments: formattedAppointments });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving upcoming appointments.", error });
   }
 };
