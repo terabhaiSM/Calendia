@@ -19,3 +19,10 @@ Thumbs.db
 .vscode/
 .idea/
 .early.coverage
+# Ignore Next.js build output
+.next/
+
+# Ignore Next.js static files
+out/
+
+frontend/.next/
