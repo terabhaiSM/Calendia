@@ -34,3 +34,20 @@ export const validateRegisterInputs = (name: string, email: string, password: st
 
   return errors;
 };
+
+export const validateLoginInputs = (email: string, password: string): string[] => {
+  const errors: string[] = [];
+
+  if (!validate(email)) {
+    errors.push("Invalid email address.");
+  }
+  if (
+    password.length < 6 ||
+    !/[A-Z]/.test(password) ||
+    !/[!@#$%^&*(),.?":{}|<>]/.test(password)
+  ) {
+    errors.push("Password must be at least 6 characters long, include an uppercase letter, and a special character.");
+  }
+
+  return errors;
+}

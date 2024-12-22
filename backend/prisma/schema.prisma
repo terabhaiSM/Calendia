@@ -20,6 +20,10 @@ model CalendarOwner {
   email        String         @unique
   password     String
   username     String         @unique
+  otp          String?
+  otpExpiresAt DateTime?
+  otpSentAt    DateTime?
+  verified     Boolean        @default(false)
   createdAt    DateTime       @default(now())
   availability Availability[]
   appointments Appointments[]
