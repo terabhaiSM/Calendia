@@ -10,15 +10,15 @@ export default function DashboardPage() {
   const router = useRouter();
   const { token, isInitialized } = useAuth();
 
-//   useEffect(() => {
-//     if (isInitialized && !token) {
-//       router.replace("/auth");
-//     }
-//   }, [token, isInitialized, router]);
+  useEffect(() => {
+    if (isInitialized && !token) {
+      router.replace("/auth");
+    }
+  }, [token, isInitialized, router]);
 
-//   if (!isInitialized || !token) {
-//     return null;
-//   }
+  if (!isInitialized || !token) {
+    return null;
+  }
 
   return (
     <DashboardLayout>
