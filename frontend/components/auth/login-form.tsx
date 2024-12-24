@@ -4,11 +4,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock } from "lucide-react";
 import { loginSchema } from "@/lib/validations/auth";
+import { useAuth } from "@/lib/auth-context";
 import {
   Form,
   FormControl,
@@ -19,8 +21,14 @@ import {
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export function LoginForm() {
+interface LoginFormProps {
+  onUnverifiedEmail?: (email: string) => void;
+}
+
+export function LoginForm({ onUnverifiedEmail }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { setAuthToken } = useAuth();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -32,10 +40,29 @@ export function LoginForm() {
 
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
-    setIsLoading(false);
+    try {
+      // Replace with your actual API call
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 401) {
+        onUnverifiedEmail?.(data.email);
+        return;
+      }
+
+      const { token } = await response.json();
+      setAuthToken(token);
+      router.push("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

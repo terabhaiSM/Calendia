@@ -19,7 +19,11 @@ import {
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export function RegisterForm() {
+interface RegisterFormProps {
+  onRegisterSuccess: (email: string) => void;
+}
+
+export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<RegisterFormValues>({
@@ -33,9 +37,14 @@ export function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Registration data:", data);
+      onRegisterSuccess(data.email);
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
     setIsLoading(false);
   };
 
