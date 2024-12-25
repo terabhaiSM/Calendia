@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { ThemeProvider } from '@/components/theme-provider';
 import { Sidebar } from '@/components/sidebar';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/lib/auth-context';
@@ -21,6 +22,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <div className="flex min-h-screen flex-col md:flex-row">
             <Sidebar />
             <main className="flex-1 overflow-y-auto bg-background pb-16 md:pb-0">
@@ -30,6 +37,7 @@ export default function RootLayout({
             </main>
           </div>
           <Toaster />
+        </ThemeProvider>
         </AuthProvider>
       </body>
     </html>
