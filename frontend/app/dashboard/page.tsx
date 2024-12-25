@@ -1,16 +1,16 @@
 "use client";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Overview } from "@/components/dashboard/overview";
+import { DashboardStats } from "@/components/dashboard/dashboard-stats";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
-import { AvailabilityView } from "@/components/dashboard/availability-view";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { token, isInitialized } = useAuth();
-
-  useEffect(() => {
+    useEffect(() => {
     if (isInitialized && !token) {
       router.replace("/auth");
     }
@@ -21,8 +21,24 @@ export default function DashboardPage() {
   }
 
   return (
-    <DashboardLayout>
-      <AvailabilityView />
-    </DashboardLayout>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
+        <p className="text-muted-foreground">
+          Welcome back! Here's what's happening with your calendar.
+        </p>
+      </div>
+
+      <DashboardStats />
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Weekly Appointments</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Overview />
+        </CardContent>
+      </Card>
+    </div>
   );
 }
