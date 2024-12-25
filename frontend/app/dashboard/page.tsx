@@ -8,17 +8,17 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const { token, isInitialized } = useAuth();
-    useEffect(() => {
-    if (isInitialized && !token) {
-      router.replace("/auth");
-    }
-  }, [token, isInitialized, router]);
+  // const router = useRouter();
+  // const { token, isInitialized } = useAuth();
+  //   useEffect(() => {
+  //   if (isInitialized && !token) {
+  //     router.replace("/auth");
+  //   }
+  // }, [token, isInitialized, router]);
 
-  if (!isInitialized || !token) {
-    return null;
-  }
+  // if (!isInitialized || !token) {
+  //   return null;
+  // }
 
   return (
     <div className="space-y-6">
