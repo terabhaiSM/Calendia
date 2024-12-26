@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function ProfileButton() {
@@ -21,6 +22,7 @@ export function ProfileButton() {
         <span className="font-medium">John Doe</span>
         <span className="text-muted-foreground text-xs">john@example.com</span>
       </div>
+      <Pencil className="h-3 w-3" />
     </Button>
   );
 }
