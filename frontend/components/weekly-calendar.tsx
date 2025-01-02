@@ -11,9 +11,22 @@ const timeSlots = Array.from({ length: 24 }, (_, i) =>
   `${i.toString().padStart(2, "0")}:00`
 );
 
+interface CalendarEvent {
+  day: string;
+  startTime: string;
+  endTime: string;
+  title: string;
+  id: string;
+}
+
+interface TimeSlot {
+  day: string;
+  time: string;
+}
+
 export function WeeklyCalendar() {
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const { events, isTimeAvailable, addEvent } = useEvents();
 
   const getEventForSlot = (day: string, time: string) => {
