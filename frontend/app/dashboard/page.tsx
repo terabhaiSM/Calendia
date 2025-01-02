@@ -8,24 +8,25 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
 export default function DashboardPage() {
-  // const router = useRouter();
-  // const { token, isInitialized } = useAuth();
-  //   useEffect(() => {
-  //   if (isInitialized && !token) {
-  //     router.replace("/auth");
-  //   }
-  // }, [token, isInitialized, router]);
+  const router = useRouter();
+  const { token, isInitialized } = useAuth();
 
-  // if (!isInitialized || !token) {
-  //   return null;
-  // }
+  useEffect(() => {
+    if (isInitialized && !token && window.location.pathname !== '/logout') {
+      router.replace("/auth");
+    }
+  }, [token, isInitialized, router]);
+
+  if (!isInitialized || !token) {
+    return null;
+  }
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
         <p className="text-muted-foreground">
-          Welcome back! Here's what's happening with your calendar.
+          Welcome back! Here&apos;s what&apos;s happening with your calendar.
         </p>
       </div>
 

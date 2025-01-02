@@ -8,6 +8,8 @@ import { LoginForm } from "@/components/auth/login-form";
 import { RegisterForm } from "@/components/auth/register-form";
 import { OTPVerification } from "@/components/auth/otp-verification";
 import { AuthLayout } from "@/components/auth/auth-layout";
+import { toast } from "sonner";
+import { API_BASE_URL } from "@/lib/config";
 
 export function AuthForm() {
   const [showOTPVerification, setShowOTPVerification] = useState(false);
@@ -24,7 +26,7 @@ export function AuthForm() {
 
   const handleResendOTP = async () => {
     try {
-      const response = await fetch("/api/auth/resend-otp", {
+      const response = await fetch(`${API_BASE_URL}/api/users/resend-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,10 +35,15 @@ export function AuthForm() {
       });
       
       if (!response.ok) {
-        throw new Error("Failed to resend OTP");
+        const error = await response.json();
+        throw new Error(error.message || "Failed to resend OTP");
       }
+      // Show success message to user
+      toast.success("OTP resent successfully");
     } catch (error) {
       console.error("Failed to resend OTP:", error);
+      // Show error message to user
+      toast.error("Failed to resend OTP");
     }
   };
 

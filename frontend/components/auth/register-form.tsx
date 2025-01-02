@@ -16,6 +16,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/lib/config";
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
@@ -25,6 +27,7 @@ interface RegisterFormProps {
 
 export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -38,14 +41,38 @@ export function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Registration data:", data);
+      const response = await fetch(`${API_BASE_URL}/api/users/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        toast({
+          variant: "destructive",
+          title: "Registration failed",
+          description: error.message,
+          className: "shadow-lg",
+        });
+        throw new Error(error.message || "Registration failed");
+      }
+
+      const result = await response.json();
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Registration successful! Please verify your email.",
+        className: "shadow-lg",
+      });
       onRegisterSuccess(data.email);
     } catch (error) {
       console.error("Registration failed:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (

@@ -18,6 +18,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { API_BASE_URL } from "@/lib/config";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -29,6 +31,7 @@ export function LoginForm({ onUnverifiedEmail }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { setAuthToken } = useAuth();
+  const { toast } = useToast();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -41,8 +44,7 @@ export function LoginForm({ onUnverifiedEmail }: LoginFormProps) {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
-      // Replace with your actual API call
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,12 +53,39 @@ export function LoginForm({ onUnverifiedEmail }: LoginFormProps) {
       });
 
       if (response.status === 401) {
-        onUnverifiedEmail?.(data.email);
-        return;
+        const error = await response.json();
+        if (error.message === "Please verify your email to continue.") {
+          onUnverifiedEmail?.(data.email);
+          return;
+        }
+        
+        toast({
+          variant: "destructive",
+          title: "Login failed",
+          description: error.message,
+          className: "shadow-lg",
+        });
+        throw new Error(error.message);
       }
 
-      const { token } = await response.json();
-      setAuthToken(token);
+      if (!response.ok) {
+        toast({
+          variant: "destructive",
+          title: "Login failed",
+          description: "Invalid credentials",
+          className: "shadow-lg",
+        });
+        throw new Error("Login failed");
+      }
+
+      const { accessToken } = await response.json();
+      setAuthToken(accessToken);
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Logged in successfully",
+        className: "shadow-lg",
+      });
       router.push("/");
     } catch (error) {
       console.error("Login failed:", error);

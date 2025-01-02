@@ -62,7 +62,7 @@ export function Overview() {
             dot={{
               strokeWidth: 2,
               r: 4,
-              strokeColor: "currentColor",
+              stroke: "currentColor",
               fill: "var(--background)",
             }}
             className="stroke-primary"
