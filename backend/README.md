@@ -2,6 +2,8 @@
 
 Calendia is a Calendar Booking System designed to facilitate seamless scheduling for Calendar Owners and their Invitees. This system supports features like setting availability, booking appointments, and listing upcoming appointments, all built with a robust and scalable tech stack.
 
+**Note** :- For latest developments please visit the [dev](https://github.com/terabhaiSM/Calendia/tree/mdl/dev) branch.
+
 ## Tech Stack
 - **Backend**: Node.js, Express.js, TypeScript  
 - **Database**: PostgreSQL (managed by Supabase)  
